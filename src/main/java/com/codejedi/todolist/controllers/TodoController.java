@@ -1,5 +1,6 @@
 package com.codejedi.todolist.controllers;
 
+import com.codejedi.todolist.exceptions.TodoNotFoundException;
 import com.codejedi.todolist.models.Todo;
 import com.codejedi.todolist.services.TodoService;
 import org.bson.types.ObjectId;
@@ -48,5 +49,8 @@ public class TodoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // TODO Add exception handler later
+    @ExceptionHandler(value = TodoNotFoundException.class)
+    public ResponseEntity<String> handleToDoNotFoundException(TodoNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
