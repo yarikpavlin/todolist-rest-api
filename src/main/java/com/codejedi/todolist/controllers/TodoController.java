@@ -27,6 +27,11 @@ public class TodoController {
         return new ResponseEntity<>(todoService.getAll(), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Todo> getTodo(@PathVariable ObjectId id) {
+        return new ResponseEntity<>(todoService.getById(id), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Todo> saveTodo(@RequestBody Todo newTodo) {
         return new ResponseEntity<>(todoService.create(newTodo), HttpStatus.CREATED);
