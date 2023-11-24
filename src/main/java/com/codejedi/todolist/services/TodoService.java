@@ -9,30 +9,35 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class TodoService {
+public class TodoService implements ITodoService{
     @Autowired
     private TodoRepository todoRepository;
 
-    public List<Todo> getAllTodos() {
+    @Override
+    public List<Todo> getAll() {
         return todoRepository.findAll();
     }
 
-    public Todo getTodoById(ObjectId id) {
+    @Override
+    public Todo getById(ObjectId id) {
         return todoRepository.findById(id).orElseThrow(() -> new TodoNotFoundException(id));
     }
 
-    public Todo saveTodo(Todo newTodo) {
-        return todoRepository.insert(newTodo);
+    @Override
+    public Todo create(Todo todo) {
+        return todoRepository.insert(todo);
     }
 
-    public Todo updateTodo(Todo updatedTodo) {
-        Todo todoFromDB = this.getTodoById(updatedTodo.getId());
-        todoFromDB.setTitle(updatedTodo.getTitle());
-        todoFromDB.setDone(updatedTodo.isDone());
-        return todoRepository.save(todoFromDB);
+    @Override
+    public Todo update(Todo todo) {
+        Todo dbTodo = this.getById(todo.getId());
+        dbTodo.setTitle(todo.getTitle());
+        dbTodo.setDone(todo.isDone());
+        return todoRepository.save(dbTodo);
     }
 
-    public void deleteTodo(ObjectId id) {
+    @Override
+    public void delete(ObjectId id) {
         todoRepository.deleteById(id);
     }
 }
