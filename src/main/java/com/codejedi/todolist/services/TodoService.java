@@ -38,6 +38,7 @@ public class TodoService implements ITodoService{
 
     @Override
     public void delete(ObjectId id) {
+        this.getById(id);
         todoRepository.deleteById(id);
     }
 }
