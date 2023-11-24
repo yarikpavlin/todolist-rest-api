@@ -19,7 +19,7 @@ public class TodoService implements ITodoService{
     }
 
     @Override
-    public Todo getById(ObjectId id) {
+    public Todo getById(ObjectId id) throws TodoNotFoundException{
         return todoRepository.findById(id).orElseThrow(() -> new TodoNotFoundException(id));
     }
 
