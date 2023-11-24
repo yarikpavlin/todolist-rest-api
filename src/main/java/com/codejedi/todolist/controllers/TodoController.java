@@ -5,6 +5,7 @@ import com.codejedi.todolist.services.TodoService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,29 +13,35 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/todos")
+@RequestMapping(
+        value = "/api/v1/todos",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+)
 public class TodoController {
     @Autowired
     private TodoService todoService;
 
     @GetMapping
     public ResponseEntity<List<Todo>> allTodos() {
-        return new ResponseEntity<List<Todo>>(todoService.getAllTodos(), HttpStatus.OK);
+        return new ResponseEntity<>(todoService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Todo> saveTodo(@RequestBody Todo newTodo) {
-        return new ResponseEntity<Todo>(todoService.saveTodo(newTodo), HttpStatus.OK);
+        return new ResponseEntity<>(todoService.create(newTodo), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<Todo> updateTodo(@RequestBody Todo updatedTodo) {
-        return new ResponseEntity<Todo>(todoService.updateTodo(updatedTodo), HttpStatus.OK);
+        return new ResponseEntity<>(todoService.update(updatedTodo), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ObjectId> deleteTodo(@PathVariable ObjectId id) {
-        todoService.deleteTodo(id);
-        return new ResponseEntity<ObjectId>(id, HttpStatus.OK);
+    public ResponseEntity<Void> deleteTodo(@PathVariable ObjectId id) {
+        todoService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    // TODO Add exception handler later
 }
